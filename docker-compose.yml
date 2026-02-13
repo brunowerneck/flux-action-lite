@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: n8n-workflow-manager
+    ports:
+      - "5173:5173"
+    volumes:
+      # NÃO montar node_modules (Windows vs Linux)
+      - /app/node_modules
+      # Montar código fonte
+      - ./src:/app/src:ro
+      - ./public:/app/public:ro
+      - ./package.json:/app/package.json:ro
+      - ./vite.config.ts:/app/vite.config.ts:ro
+      - ./tailwind.config.cjs:/app/tailwind.config.cjs:ro
+      - ./postcss.config.cjs:/app/postcss.config.cjs:ro
+      - ./tsconfig.json:/app/tsconfig.json:ro
+      - ./tsconfig.node.json:/app/tsconfig.node.json:ro
+      - ./index.html:/app/index.html:ro
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true
+      - CHOKIDAR_INTERVAL=1000
+      - WATCHPACK_POLLING=true
+    stdin_open: true
+    tty: true
